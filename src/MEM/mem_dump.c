@@ -14,7 +14,7 @@ int mem_dump_paragraph(FILE* ostream, char** mem_block, int* nchars) {
     fprintf(ostream, " ");
     p = *mem_block;
     for(i = 0; i < 16; i++)
-        fprintf(ostream, "%c", i < n ? (*p >= 0x20 && *p <= 0x7F ? *p++ : (p++, '.')) : ' ');
+        fprintf(ostream, "%c", i < n ? (*p >= 0x20 && *p <= 0x7E ? *p++ : (p++, '.')) : ' ');
     fprintf(ostream, "\n");
     *mem_block += n;
     *nchars -= n;

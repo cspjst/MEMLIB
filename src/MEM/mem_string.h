@@ -10,7 +10,7 @@
  * compare two blocks of memory, returning zero if they are identical,
  * or a non-zero value indicating which block is greater.
  */
- int mem_cmp(const void *s1, const void *s2, int n);
+int mem_cmp(const void *s1, const void *s2, int n);
 
 /**
  * like GLIBC memmem - locate a substring
