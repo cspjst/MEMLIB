@@ -1,7 +1,6 @@
 /**
  *  @author      Jeremy Simon Thornton
  *  @copyright   2024 Jeremy Simon Thornton
- *  @version     0.1.2
  *  @url https://www.stanislavs.org/helppc/
  *  @brief     The memory arena paradigm - one lifetime to bind them all.
  *  @details   Untangling lifetimes with absurdly simple linear allocator, lightning fast allocation and

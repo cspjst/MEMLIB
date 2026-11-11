@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include "TEST/test_dos.h"
+#include "TEST/test_arena.h"
 
 int main() {
     printf("MEMLIB!\n");
