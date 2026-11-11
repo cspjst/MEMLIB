@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Toolchain (DOS / I86 / wcl) comes from cmk.sh -D flags.          # <-- CHANGED: MEM -> DOS
-project(MEMLIB VERSION 0.6.0 LANGUAGES C)
+project(MEMLIB VERSION 0.6.2 LANGUAGES C)
 
 # Compiler options
 # Reference: https://users.pja.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html

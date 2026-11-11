@@ -3,7 +3,7 @@
 
 #define MEM_VERSION_MAJOR  0
 #define MEM_VERSION_MINOR  6
-#define MEM_VERSION_PATCH  0
+#define MEM_VERSION_PATCH  2
 
 /**
  * single comparable value: 0xMMmm (major high byte, minor low byte)
@@ -11,7 +11,7 @@
  */
 #define MEM_VERSION        ((MEM_VERSION_MAJOR << 8) | MEM_VERSION_MINOR)
 
-#define MEM_VERSION_STRING "0.6.0"
+#define MEM_VERSION_STRING "0.6.2"
 
 /**
 * @brief   Version of MEM.LIB as built.
