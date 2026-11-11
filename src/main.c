@@ -3,6 +3,6 @@
 
 int main() {
     printf("MEMLIB!\n");
-    //test_dos();
+    test_arena();
     return 0;
 }

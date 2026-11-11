@@ -1,8 +1,8 @@
-#include "dos_mem_dump.h"
+#include "mem_dump.h"
 
 #include <stdio.h>
 
-#include "DOS/dos_memory_constants.h"
+#include "../include/DOS/dos_memory_constants.h"
 
 int mem_dump_paragraph(FILE* ostream, char** mem_block, int* nchars) {
     char* p = *mem_block;

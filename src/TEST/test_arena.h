@@ -4,13 +4,17 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "MEM/dos_mem_arena.h"
-#include "DOS/dos_memory_constants.h"
+#include "../MEM/mem_arena.h"
+#include "../include/DOS/dos_memory_constants.h"
+#include "../include/DOS/dos_memory_services.h"
 
 void test_new() {
     printf("Testing arena new & free...\n");
     dos_memsize_t pcap =64;
     dos_memsize_t bcap = pcap * DOS_PARAGRAPH_SIZE;
+    unsigned short maxfree;
+    dos_get_free_memory_paragraphs(&maxfree);
+
 
     mem_arena_t* arena = mem_new_arena(pcap);
     assert(arena != NULL);
@@ -28,7 +32,7 @@ void test_new() {
     assert(mem_arena_alloc(arena, 1) == NULL);
     assert(mem_free_arena(arena) == 0);
 
-    arena = mem_new_arena(DOS_MAX_ALLOCATE_BYTES);
+    arena = mem_new_arena(maxfree);
     assert(arena == NULL);
     assert(mem_free_arena(arena) == 0);
 
@@ -105,14 +109,12 @@ void test_mcb(void) {
     printf("Testing arena mcb...\n");
     dos_memsize_t pcap =64;
     dos_memsize_t bcap = pcap * DOS_PARAGRAPH_SIZE;
-    set_log_stream(stderr);
 
     mem_arena_t* arena = mem_new_arena(pcap);
     assert(arena != NULL);
 
     const char* mcb = (char*)mem_arena_mcb(arena);
     assert(*mcb == 'M');
-    log_para(mcb);
 
     assert(mem_free_arena(arena) == bcap);
 

@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Jeremy Simon Thornton, License: MIT
 cmake_minimum_required(VERSION 3.10)
 
-# Toolchain (MEM / I86 / wcl) comes from cmk.sh -D flags.
+# Toolchain (DOS / I86 / wcl) comes from cmk.sh -D flags.          # <-- CHANGED: MEM -> DOS
 project(MEMLIB VERSION 0.6.0 LANGUAGES C)
 
 # Compiler options
@@ -21,6 +21,11 @@ add_compile_options(
 # Optional switches:
 #   -e<n>   stop after n errors
 #   -fpi87  assume 8087 present (only if every target XT has one)
+
+# Dependencies
+# DOSLIB (vendored copy: include/DOS/*.h, lib/DOS.lib)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(DOS_LIB ${CMAKE_CURRENT_SOURCE_DIR}/lib/DOS.lib)
 
 # Sources
 # Library code
@@ -48,15 +53,16 @@ configure_file(
 )
 
 # Build mode selection
-# set(MAKE_LIB ON)
+set(MAKE_LIB ON)
 
 if(MAKE_LIB)
     # MEM.LIB from library code; TEST.exe gets MEM code only via the lib
     add_library(MEMLIB STATIC ${MEM_SOURCES})
     set_target_properties(MEMLIB PROPERTIES OUTPUT_NAME MEM)
     add_executable(TEST ${TEST_SOURCES})
-    target_link_libraries(TEST PRIVATE MEMLIB)
+    target_link_libraries(TEST PRIVATE MEMLIB ${DOS_LIB})
 else()
     # Everything compiled straight into TEST.exe
     add_executable(TEST ${TEST_SOURCES} ${MEM_SOURCES})
+    target_link_libraries(TEST PRIVATE ${DOS_LIB})
 endif()

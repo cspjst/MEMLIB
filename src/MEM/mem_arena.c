@@ -19,10 +19,10 @@
 #include <stddef.h>
 #include <stdio.h>
 
-#include "DOS/dos_memory_services.h"
-#include "DOS/dos_memory_types.h"
-#include "DOS/dos_memory_constants.h"
-#include "DOS/dos_error.h"
+#include "../include/DOS/dos_memory_services.h"
+#include "../include/DOS/dos_memory_types.h"
+#include "../include/DOS/dos_memory_constants.h"
+#include "../include/DOS/dos_error.h"
 
 
 //#include <stdio.h>

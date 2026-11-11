@@ -1,4 +1,7 @@
 #include "mem_version.h"
+#include "../include/DOS/dos_version.h"
+
+//DOS_VERSION
 
 unsigned int mem_version() {
     return MEM_VERSION;
