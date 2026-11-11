@@ -38,21 +38,20 @@ typedef struct private_mem_arena {
 
 // Allocate a DOS memory block and embed the arena struct at its start
 mem_arena_t* mem_new_arena(dos_memsize_t paragraphs) {
+    const dos_memsize_t header = (sizeof(mem_arena_t) + DOS_PARAGRAPH_SIZE - 1) / DOS_PARAGRAPH_SIZE;
     errno = EINVAL;
-    if(!paragraphs) { perror(__FUNCTION__); return NULL; }
+    // reject 0, and anything whose request (paragraphs + header) won't fit in BX
+    if(!paragraphs || paragraphs > 0xFFFFUL - header) { perror(__FUNCTION__); return NULL; }
     errno = ENOMEM;
-	dos_address_t base = {0};
-	dos_error_code_t e = dos_allocate_memory_blocks(
-	    paragraphs + ((sizeof(mem_arena_t) + DOS_PARAGRAPH_SIZE - 1) / DOS_PARAGRAPH_SIZE),
-		&base.parts.segment
-	);
-	if(e) { dos_perror(__FUNCTION__, e); return NULL; }
-	mem_arena_t* arena = (mem_arena_t*)base.ptr;
-	arena->base = base;
-	arena->begin.memloc = arena->free.memloc = arena->base.memloc + sizeof(mem_arena_t);
-	arena->end.memloc = arena->begin.memloc + (paragraphs * DOS_PARAGRAPH_SIZE);
-	errno = 0;
-	return arena;
+    dos_address_t base = {0};
+    dos_error_code_t e = dos_allocate_memory_blocks(paragraphs + header, &base.parts.segment);
+    if(e) { dos_perror(__FUNCTION__, e); return NULL; }
+    mem_arena_t* arena = (mem_arena_t*)base.ptr;
+    arena->base = base;
+    arena->begin.memloc = arena->free.memloc = arena->base.memloc + sizeof(mem_arena_t);
+    arena->end.memloc = arena->begin.memloc + (paragraphs * DOS_PARAGRAPH_SIZE);
+    errno = 0;
+    return arena;
 }
 
 dos_memsize_t mem_arena_size(mem_arena_t* arena) {
@@ -78,12 +77,12 @@ void* mem_arena_alloc(mem_arena_t* arena, dos_memsize_t byte_request) {
 dos_memsize_t mem_free_arena(mem_arena_t* arena) {
     errno = EINVAL;
     if(!arena) { perror(__FUNCTION__); return 0; }
-	dos_memsize_t freed = mem_arena_capacity(arena);
-	dos_error_code_t e = dos_free_allocated_memory_blocks(arena->base.parts.segment);
-	if(e) { dos_perror(__FUNCTION__, e); return 0; }
-	arena->base.ptr = arena->begin.ptr = arena->free.ptr = arena->end.ptr = 0;
-	errno = 0;
-	return freed;
+    dos_memsize_t freed = mem_arena_capacity(arena);   // read before the block goes
+    dos_error_code_t e = dos_free_allocated_memory_blocks(arena->base.parts.segment);
+    if(e) { dos_perror(__FUNCTION__, e); return 0; }
+    // arena lived inside the freed block: do not touch it after this point
+    errno = 0;
+    return freed;
 }
 
 dos_mcb_t* mem_arena_mcb(mem_arena_t* arena) {
